@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Efficient
+Bundle-SymbolicName: com.pactera.eclipse.efficient; singleton:=true
+Bundle-Version: 0.1.3.v20130205
+Bundle-Activator: com.pactera.eclipse.efficient.EfficientPlugin
+Bundle-Vendor: PACTERA
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources,
+ org.eclipse.ui.console,
+ org.junit
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .,
+ lib/poi-3.6-20091214.jar
