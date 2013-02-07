@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Efficient
 Bundle-SymbolicName: com.pactera.eclipse.efficient; singleton:=true
-Bundle-Version: 0.1.3.v20130205
+Bundle-Version: 0.1.4.v20130207
 Bundle-Activator: com.pactera.eclipse.efficient.EfficientPlugin
 Bundle-Vendor: PACTERA
 Require-Bundle: org.eclipse.ui,
