@@ -99,18 +99,26 @@ public class MakeDesignHelper extends Observable {
 	}
 
 	/**
-	 * 根据数据库设计文件生成SQL
+	 * 根据数据库设计文件生成建表及序列脚本
 	 * 
 	 * @throws IOException
 	 */
 	public void makeDB() throws IOException {
 		List<Table> tables = DesignParser.parseDBFile(file);
-		File dir = new File(file.getParent(), SQL_DIR_NAME + File.separator + "01_Table");
-		FileUtil.mkdirs(dir);
+		File tableDir = new File(file.getParent(), SQL_DIR_NAME + File.separator + "01_Table");
+		File seqDir = new File(file.getParent(), SQL_DIR_NAME + File.separator + "02_Sequence");
+		FileUtil.mkdirs(tableDir);
 		for (Table table : tables) {
-			final File sqlFile = new File(dir, table.getEnglishName() + ".sql");
+			File sqlFile = new File(tableDir, table.getEnglishName() + ".sql");
 			FileUtil.writeString2File(table.toSQL(), sqlFile, "GBK");
-			notify("+ " + sqlFile.getName());
+			notify("+ TABLE: " + sqlFile.getName());
+			String seq = table.toSequence();
+			if (seq != null) {
+				FileUtil.mkdirs(seqDir);
+				File seqFile = new File(seqDir, table.getEnglishName() + "_NO.sql");
+				FileUtil.writeString2File(seq, seqFile, "GBK");
+				notify("+ SEQUENCE: " + seqFile.getName());
+			}
 		}
 	}
 
