@@ -1,5 +1,8 @@
 package com.pactera.util;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class StringUtil {
 
 	public static String repeat(String s, int times) {
@@ -73,6 +76,18 @@ public class StringUtil {
 			return repeat('\t', count);
 		}
 		return s + repeat('\t', count - s.length() / 4);
+	}
+
+	public static String findFirst(Pattern pattern, String s) {
+		Matcher matcher = pattern.matcher(s);
+		if (matcher.find()) {
+			return matcher.group();
+		}
+		return null;
+	}
+
+	public static String findFirst(String regex, String s) {
+		return findFirst(Pattern.compile(regex), s);
 	}
 
 }
