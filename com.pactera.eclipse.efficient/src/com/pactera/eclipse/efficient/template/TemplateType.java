@@ -2,7 +2,7 @@ package com.pactera.eclipse.efficient.template;
 
 public enum TemplateType {
 
-	BIZ("biz"), OPERATION("operation"), JSP("jsp"), JSP_AJAX("ajax.jsp");
+	BIZ("biz"), OPERATION("operation"), JSP("jsp"), JSP_AJAX("ajax.jsp"), SEQUENCE("sequence");
 
 	private String name;
 

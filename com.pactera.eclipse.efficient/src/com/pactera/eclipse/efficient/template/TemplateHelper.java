@@ -38,6 +38,14 @@ public class TemplateHelper {
 		return template;
 	}
 
+	public static String getFinalContent(TemplateType type, KeyValues keyValues) {
+		String template = getTemplate(type);
+		for (KeyValue kv : keyValues.getPairs()) {
+			template = template.replaceAll("\\{\\s*" + kv.getKey() + "\\s*\\}", kv.getValue());
+		}
+		return template;
+	}
+
 	public static String getTemplate(String name) {
 		return getTemplate(TemplateType.valueOf(name));
 	}
