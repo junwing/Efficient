@@ -24,7 +24,7 @@
             adaptable="true"
             id="com.pactera.eclipse.efficient.contribution2">
          <action
-               label="Merge List"
+               label="&amp;Merge List"
                class="com.pactera.eclipse.efficient.popup.actions.MergeListAction"
                menubarPath="additions"
                enablesFor="+"
@@ -39,7 +39,7 @@
             adaptable="true"
             id="com.pactera.eclipse.efficient.contribution3">
          <action
-               label="Make Design"
+               label="&amp;Make Design"
                class="com.pactera.eclipse.efficient.popup.actions.MakeDesignAction"
                menubarPath="additions"
                enablesFor="1"
@@ -63,7 +63,7 @@
             nameFilter="*tables.xls"
             id="com.pactera.eclipse.efficient.contribution4">
          <action
-               label="Make DB"
+               label="&amp;Make DB"
                class="com.pactera.eclipse.efficient.popup.actions.MakeDBAction"
                menubarPath="additions"
                enablesFor="1"
