@@ -1,12 +1,11 @@
 package com.pactera.eclipse.efficient.module.db;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.pactera.util.StringUtil;
 
 /**
- * @author Install
+ * @author ruanzr
  * 
  */
 public class Column {
@@ -88,10 +87,7 @@ public class Column {
 	private static String fetchDefaultValue(String desc) {
 		int index = desc.indexOf("Ä¬ÈÏ");
 		if (index > -1) {
-			Matcher matcher = DEFAULT_VALUE_PATTERN.matcher(desc.replaceAll("[¡®¡¯]", "'").substring(index));
-			if (matcher.find()) {
-				return matcher.group();
-			}
+			return StringUtil.findFirst(DEFAULT_VALUE_PATTERN, desc.replaceAll("[¡®¡¯]", "'").substring(index));
 		}
 		return null;
 	}

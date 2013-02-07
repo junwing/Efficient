@@ -3,10 +3,17 @@ package com.pactera.eclipse.efficient.module.db;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pactera.eclipse.efficient.template.KeyValues;
+import com.pactera.eclipse.efficient.template.TemplateHelper;
+import com.pactera.eclipse.efficient.template.TemplateType;
 import com.pactera.util.DateUtil;
 import com.pactera.util.ListUtil;
 import com.pactera.util.StringUtil;
 
+/**
+ * @author ruanzr
+ * 
+ */
 public class Table {
 
 	private String chineseName;
@@ -14,7 +21,7 @@ public class Table {
 	private String prefix;
 	private List<Column> columns;
 	private String description;
-	private List<String> primaryKeys;
+	private List<Column> primaryKeys;
 
 	public Table(String chineseName, String englishName, String prefix, String description) {
 		this.chineseName = chineseName;
@@ -22,7 +29,7 @@ public class Table {
 		this.prefix = prefix;
 		this.description = description;
 		this.columns = new ArrayList<Column>();
-		this.primaryKeys = new ArrayList<String>();
+		this.primaryKeys = new ArrayList<Column>();
 	}
 
 	public String getChineseName() {
@@ -60,7 +67,7 @@ public class Table {
 	public void addColumn(Column column) {
 		this.columns.add(column);
 		if ("主键".equals(column.getConstraint())) {
-			this.primaryKeys.add(column.getName());
+			this.primaryKeys.add(column);
 		}
 	}
 
@@ -72,7 +79,7 @@ public class Table {
 		this.description = description;
 	}
 
-	public List<String> getPrimaryKeys() {
+	public List<Column> getPrimaryKeys() {
 		return primaryKeys;
 	}
 
@@ -80,6 +87,11 @@ public class Table {
 		return "Table [chineseName=" + chineseName + ", englishName=" + englishName + ", prefix=" + prefix + ", columns=" + columns + ", description=" + description + "]";
 	}
 
+	/**
+	 * 生成建表脚本
+	 * 
+	 * @return 建表脚本
+	 */
 	public String toSQL() {
 		StringBuffer sql = new StringBuffer();
 		sql.append("--------------------------------------\n");
@@ -109,12 +121,39 @@ public class Table {
 			sql.append('\n');
 		}
 		if (getPrimaryKeys().size() > 0) {
-			sql.append('\t').append("PRIMARY KEY(").append(ListUtil.toString(getPrimaryKeys(), ", ")).append(')').append('\n');
+			List<String> names = new ArrayList<String>(getPrimaryKeys().size());
+			for (Column col : getPrimaryKeys()) {
+				names.add(col.getName());
+			}
+			sql.append('\t').append("PRIMARY KEY(").append(ListUtil.toString(names, ", ")).append(')').append('\n');
 		} else {
 			sql.deleteCharAt(sql.lastIndexOf(","));
 		}
 		sql.append(");\n");
 		return sql.toString();
+	}
+
+	/**
+	 * 对只有一个主键的表并且主键后缀为<code>NO</code>的字段生成<code>sequence</code>
+	 * 
+	 * @return sequence
+	 */
+	public String toSequence() {
+		if (getPrimaryKeys().size() == 1) {
+			Column col = getPrimaryKeys().get(0);
+			if (col.getName().endsWith("NO")) {
+				KeyValues kvs = new KeyValues();
+				kvs.addPair("name", getEnglishName() + "_NO");
+				kvs.addPair("description", getChineseName().replaceFirst("流水表?", "") + col.getDescription());
+				kvs.addPair("date", DateUtil.getFormatedDateTime("yyyy.MM.dd"));
+				String lens = StringUtil.findFirst("(?<=\\()\\d+(?=\\))", col.getType());
+				int len = StringUtil.isEmpty(lens) ? 10 : Integer.parseInt(lens);
+				kvs.addPair("minValue", "1" + StringUtil.repeat('0', len - 1));
+				kvs.addPair("maxValue", StringUtil.repeat('9', len));
+				return TemplateHelper.getFinalContent(TemplateType.SEQUENCE, kvs);
+			}
+		}
+		return null;
 	}
 
 }
