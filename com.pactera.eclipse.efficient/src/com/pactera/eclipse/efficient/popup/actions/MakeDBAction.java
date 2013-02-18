@@ -27,7 +27,7 @@ public class MakeDBAction extends BaseAction {
 				if (element instanceof IFile) {
 					IFile iFile = (IFile) element;
 					final IProject project = iFile.getProject();
-					MakeDesignHelper helper = new MakeDesignHelper(iFile.getLocation().toFile(), project.getLocation().toOSString());
+					MakeDesignHelper helper = new MakeDesignHelper(iFile.getLocation().toFile());
 					try {
 						helper.addObserver(new ActionObserver(console));
 						helper.makeDB();

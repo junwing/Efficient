@@ -25,16 +25,24 @@ public class MakeDesignHelper extends Observable {
 	private DesignDefination design;
 
 	private File file;
-	private String projectPath;
 	
-	public MakeDesignHelper(File file, String projectPath) {
+	public MakeDesignHelper(File file) {
 		super();
 		this.file = file;
-		this.projectPath = projectPath;
 	}
 
 	/**
-	 * 根据设计文件生成biz, mvc, jsp到对应工程目录下
+	 * 使用<code>makeDesign()</code>方法前要先<code>override</code>该方法，以返回工程的实际路径
+	 * 
+	 * @param projectName
+	 * @return
+	 */
+	public String getPath(String projectName) {
+		return null;
+	}
+
+	/**
+	 * 根据设计文件生成biz, mvc, jsp到对应工程目录下。调用该方法前应该<code>override getPath()</code>方法
 	 * 
 	 * @return
 	 * @throws IOException
@@ -43,7 +51,12 @@ public class MakeDesignHelper extends Observable {
 		List<String> fileList = new ArrayList<String>();
 		design = DesignParser.parseDesignFile(file);
 		final String projectName = design.getProjectName();
-		File targetProject = new File(new File(projectPath).getParentFile(), projectName);
+		String path = getPath(projectName);
+		if(path == null) {
+			notify(projectName + " does not exists");
+			return fileList;
+		}
+		File targetProject = new File(path);
 		if (!targetProject.exists()) {
 			return fileList;
 		}

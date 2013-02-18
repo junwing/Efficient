@@ -27,7 +27,11 @@ public class MakeDesignAction extends BaseAction {
 				if (element instanceof IFile) {
 					IFile iFile = (IFile) element;
 					final IProject project = iFile.getProject();
-					MakeDesignHelper helper = new MakeDesignHelper(iFile.getLocation().toFile(), project.getLocation().toOSString());
+					MakeDesignHelper helper = new MakeDesignHelper(iFile.getLocation().toFile()) {
+						public String getPath(String projectName) {
+							return project.getParent().findMember(projectName).getLocation().toOSString();
+						}
+					};
 					try {
 						helper.addObserver(new ActionObserver(console));
 						helper.toFile(helper.makeDesign());
