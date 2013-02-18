@@ -42,7 +42,7 @@ public class DesignParser {
 
 			String name = null;
 			boolean mvcFlag = false;
-			for (int i = 3; i < sheet.getLastRowNum(); i++) {
+			for (int i = 3; i <= sheet.getLastRowNum(); i++) {
 				row = sheet.getRow(i);
 				final String value = getCellValue(row, 0);
 				if (!StringUtil.isEmpty(value)) {
