@@ -7,6 +7,7 @@ import java.util.List;
 import org.junit.Test;
 
 import com.pactera.eclipse.efficient.module.db.Table;
+import com.pactera.eclipse.efficient.module.define.DesignDefination;
 
 public class DesignParserTest {
 
@@ -26,6 +27,13 @@ public class DesignParserTest {
 		for (Table table : tables) {
 			System.out.println(table.toSequence());
 		}
+	}
+
+	@Test
+	public void testParseDesignFile() throws IOException {
+		String path = "E:\\workspaces\\runtime-EclipseApplication\\test\\02_网银项目组_内管功能优化_innermanage.xls";
+		DesignDefination designFile = DesignParser.parseDesignFile(new File(path));
+		System.out.println(designFile);
 	}
 
 }
