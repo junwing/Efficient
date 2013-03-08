@@ -1,0 +1,9 @@
+{chineseName}审核查询,{bsnCode}_{englishName}AuthResultQuery,,{bsnCode}_{english_name}_auth_result.jsp
+{chineseName}审核查询ajax,{bsnCode}_{englishName}AuthResultQueryAjax,{directoryName}\{englishName}Manage.query{EnglishName}AuthResult,{bsnCode}_{english_name}_auth_result_ajax.jsp
+{chineseName}审核详情查询,{bsnCode}_{englishName}AuthResultDetailQuery,{directoryName}\{englishName}Manage.query{EnglishName}Detail,{bsnCode}_{english_name}_auth_result_detail.jsp
+{chineseName}复核/授权,{bsnCode}_{englishName}Auth,,{bsnCode}_{english_name}_auth.jsp
+{chineseName}指令复核/授权列表,{bsnCode}_{englishName}AuthListQuery,{directoryName}\{englishName}Manage.query{EnglishName}AuthList,{bsnCode}_{english_name}_auth_list_ajax.jsp
+{chineseName}强制授权,{bsnCode}_{englishName}ForceAuth,,{bsnCode}_{english_name}_force_auth.jsp
+{chineseName}指令强制授权列表,{bsnCode}_{englishName}ForceAuthListQuery,{directoryName}\{englishName}Manage.query{EnglishName}ForceAuthList,{bsnCode}_{english_name}_force_auth_list.jsp
+{chineseName}查询维护,{bsnCode}_{englishName}Manage,,{bsnCode}_{english_name}_manage_list.jsp
+{chineseName}查询维护ajax,{bsnCode}_{englishName}ManageAjax,{directoryName}\{englishName}Manage.{englishName}Manage,{bsnCode}_{english_name}_manage_ajax.jsp
