@@ -1,9 +1,14 @@
 package com.pactera.eclipse.efficient.module.define;
 
+import java.io.File;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import com.pactera.eclipse.efficient.module.AbstractDefination;
+import com.pactera.util.StringUtil;
 
 /**
  * 设计定义，主要包括biz定义和mvc定义
@@ -13,10 +18,13 @@ import com.pactera.eclipse.efficient.module.AbstractDefination;
  */
 public class DesignDefination extends AbstractDefination {
 
+	private File srcFile;
+	private double version;
 	private String projectName;
 	private String requirementName;
-	private String directoryName;
+	private String tableFileName;
 
+	private Map<String, MenuDefination> menus;
 	private Map<String, BizDefination> bizs;
 	private Map<String, MvcDefination> mvcs;
 
@@ -30,16 +38,37 @@ public class DesignDefination extends AbstractDefination {
 	}
 
 	private void init() {
+		this.menus = new TreeMap<String, MenuDefination>();
 		this.bizs = new HashMap<String, BizDefination>();
 		this.mvcs = new HashMap<String, MvcDefination>();
 	}
 
-	public void AddBiz(String bizName, BizDefination define) {
+	public File getSrcFile() {
+		return srcFile;
+	}
+
+	public void setSrcFile(File srcFile) {
+		this.srcFile = srcFile;
+	}
+
+	public void addMenu(String bsnCode, MenuDefination define) {
+		this.menus.put(bsnCode, define);
+	}
+
+	public void addBiz(String bizName, BizDefination define) {
 		this.bizs.put(bizName, define);
 	}
 
-	public void AddMvc(String mvcName, MvcDefination define) {
+	public void addMvc(String mvcName, MvcDefination define) {
 		this.mvcs.put(mvcName, define);
+	}
+
+	public double getVersion() {
+		return version;
+	}
+
+	public void setVersion(double version) {
+		this.version = version;
 	}
 
 	public String getProjectName() {
@@ -58,12 +87,16 @@ public class DesignDefination extends AbstractDefination {
 		this.requirementName = requirementName;
 	}
 
-	public String getDirectoryName() {
-		return directoryName;
+	public String getTableFileName() {
+		return tableFileName;
 	}
 
-	public void setDirectoryName(String directoryName) {
-		this.directoryName = directoryName;
+	public void setTableFileName(String tableFileName) {
+		this.tableFileName = tableFileName;
+	}
+
+	public Map<String, MenuDefination> getMenus() {
+		return menus;
 	}
 
 	public Map<String, BizDefination> getBizs() {
@@ -82,9 +115,36 @@ public class DesignDefination extends AbstractDefination {
 		return this.mvcs.get(mvcName);
 	}
 
+	public String[] getLOAFTables() {
+		Set<String> tables = new HashSet<String>();
+		for (String bsnCode : this.menus.keySet()) {
+			MenuDefination menu = this.menus.get(bsnCode);
+			if (menu.isSubmitAndAuth() && !StringUtil.isEmpty(menu.getTableName())) {
+				tables.add(menu.getTableName());
+			}
+		}
+		return tables.toArray(new String[0]);
+	}
+
+	public String toTaskInfo() {
+		if (this.menus.size() > 0) {
+			StringBuffer tsk = new StringBuffer();
+			for (String bsnCode : this.menus.keySet()) {
+				MenuDefination menu = this.menus.get(bsnCode);
+				if (tsk.length() == 0) {
+					tsk.append("<TaskGroup id=\"" + menu.getBsnCode().substring(0, 4) + "\" name=\"" + this.getRequirementName() + "\">\n");
+				}
+				tsk.append(menu.toXml()).append('\n');
+			}
+			tsk.append("</TaskGroup>\n\n");
+			return tsk.toString();
+		}
+		return null;
+	}
+
 	public String toString() {
-		return "DesignDefine [\nprojectName=" + projectName + ", \nrequirementName=" + requirementName + ", \ndirectoryName=" + directoryName + ", \nbizs=" + bizs + ", \nmvcs="
-				+ mvcs + "\n]";
+		return "DesignDefination [projectName=" + projectName + ", requirementName=" + requirementName + ", directoryName=" + directoryName + ", menus=" + menus + ", bizs=" + bizs
+				+ ", mvcs=" + mvcs + "]";
 	}
 
 }

@@ -3,11 +3,13 @@ package com.pactera.eclipse.efficient.poi;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
 import com.pactera.eclipse.efficient.module.db.Table;
 import com.pactera.eclipse.efficient.module.define.DesignDefination;
+import com.pactera.eclipse.efficient.module.define.MenuDefination;
 
 public class DesignParserTest {
 
@@ -34,6 +36,20 @@ public class DesignParserTest {
 		String path = "E:\\workspaces\\runtime-EclipseApplication\\test\\02_网银项目组_内管功能优化_innermanage.xls";
 		DesignDefination designFile = DesignParser.parseDesignFile(new File(path));
 		System.out.println(designFile);
+		System.out.println(designFile.getVersion() == 0);
+	}
+
+	@Test
+	public void testParseDesignFile2() throws IOException {
+		String path = "C:\\Users\\Install\\Desktop\\02_网银项目组_企业基金设计2.0_corporbank.xls";
+		DesignDefination designFile = DesignParser.parseDesignFile(new File(path));
+		System.out.println(designFile);
+		System.out.println(designFile.getVersion() == 0.1);
+		Map<String, MenuDefination> menus = designFile.getMenus();
+		for (String bsnCode: menus.keySet()) {
+			MenuDefination md = menus.get(bsnCode);
+			System.out.println(md);
+		}
 	}
 
 }

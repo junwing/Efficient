@@ -9,23 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import com.pactera.eclipse.efficient.logging.ELog;
 import com.pactera.eclipse.efficient.module.PatchInfo;
 import com.pactera.eclipse.efficient.module.db.Table;
-import com.pactera.eclipse.efficient.module.define.ActionDefination;
 import com.pactera.eclipse.efficient.module.define.DesignDefination;
 import com.pactera.eclipse.efficient.poi.DesignParser;
-import com.pactera.eclipse.efficient.template.TemplateHelper;
-import com.pactera.eclipse.efficient.template.TemplateType;
 import com.pactera.file.util.FileUtil;
 
 public class MakeDesignHelper extends Observable {
 
-	private static final String CHARSET = "UTF-8";
-	private FilePather pather;
 	private DesignDefination design;
 
 	private File file;
-	
+
 	public MakeDesignHelper(File file) {
 		super();
 		this.file = file;
@@ -50,64 +46,23 @@ public class MakeDesignHelper extends Observable {
 	public List<String> makeDesign() throws IOException {
 		List<String> fileList = new ArrayList<String>();
 		design = DesignParser.parseDesignFile(file);
-		final String projectName = design.getProjectName();
+		String projectName = design.getProjectName();
 		String path = getPath(projectName);
-		if(path == null) {
-			notify(projectName + " does not exists");
+		if (path == null) {
+			ELog.info(projectName + " does not exists");
 			return fileList;
 		}
 		File targetProject = new File(path);
 		if (!targetProject.exists()) {
 			return fileList;
 		}
-		final File bizDir = new File(targetProject, "designFiles/bizs/" + projectName + "/" + design.getDirectoryName());
-		FileUtil.mkdir(bizDir);
-		final File mvcDir = new File(targetProject, "designFiles/mvcs/" + projectName + "/" + design.getDirectoryName());
-		FileUtil.mkdir(mvcDir);
 
-		pather = new FilePather(projectName);
-		int bizCount = 0, mvcCount = 0, jspCount = 0;
-		for (String bizName : design.getBizs().keySet()) {
-			File bizFile = new File(bizDir, append(bizName, ".biz"));
-			if (bizFile.exists()) {
-				notifyFileExists(bizFile);
-				continue;
-			}
-			FileUtil.writeString2File(design.getBiz(bizName).toXml(), bizFile, CHARSET);
-			bizCount++;
-			notifyAdd(bizFile);
-			fileList.add(getFileListPath(bizFile));
+		if (design.getVersion() == 0.1) {
+			GenerateFactory.getGenerater(projectName).generate(design, targetProject);
+		} else {
+			new CommonCodeGenerater(projectName).generate(design, targetProject);
 		}
-		for (String mvcName : design.getMvcs().keySet()) {
-			File mvcFile = new File(mvcDir, append(mvcName, ".mvc"));
-			if (mvcFile.exists()) {
-				notifyFileExists(mvcFile);
-			} else {
-				FileUtil.writeString2File(design.getMvc(mvcName).toXml(), mvcFile, CHARSET);
-				mvcCount++;
-				notifyAdd(mvcFile);
-				fileList.add(getFileListPath(mvcFile));
-			}
-			// Éú³Éjsp
-			for (ActionDefination actionDef : design.getMvc(mvcName).getActions()) {
-				File jsp = new File(mvcDir.getParentFile(), actionDef.getTargetJsp());
-				if (jsp.exists()) {
-					notifyFileExists(jsp);
-					continue;
-				}
-				String template = null;
-				if (actionDef.getTargetJsp().endsWith(TemplateType.JSP_AJAX.getName())) {
-					template = TemplateHelper.getTemplate(TemplateType.JSP_AJAX);
-				} else {
-					template = TemplateHelper.getJspTemplate();
-				}
-				FileUtil.writeString2File(template, jsp, CHARSET);
-				jspCount++;
-				notifyAdd(jsp);
-				fileList.add(getFileListPath(jsp));
-			}
-		}
-		notify("new count: biz(" + bizCount + ") mvc(" + mvcCount + ") jsp(" + jspCount + ")");
+
 		return fileList;
 	}
 
@@ -124,13 +79,13 @@ public class MakeDesignHelper extends Observable {
 		for (Table table : tables) {
 			File sqlFile = new File(tableDir, table.getEnglishName() + ".sql");
 			FileUtil.writeString2File(table.toSQL(), sqlFile, "GBK");
-			notify("+ TABLE: " + sqlFile.getName());
+			ELog.info("+ TABLE: " + sqlFile.getName());
 			String seq = table.toSequence();
 			if (seq != null) {
 				FileUtil.mkdirs(seqDir);
 				File seqFile = new File(seqDir, table.getEnglishName() + "_NO.sql");
 				FileUtil.writeString2File(seq, seqFile, "GBK");
-				notify("+ SEQUENCE: " + seqFile.getName());
+				ELog.info("+ SEQUENCE: " + seqFile.getName());
 			}
 		}
 	}
@@ -151,52 +106,6 @@ public class MakeDesignHelper extends Observable {
 
 	public DesignDefination getDesign() {
 		return design;
-	}
-
-	private String getFilePath(File file) {
-		return pather.getFilePath(file);
-	}
-
-	private String getFileListPath(File file) {
-		return pather.getFileListPath(file);
-	}
-
-	private void notify(String msg) {
-		setChanged();
-		notifyObservers(msg);
-	}
-
-	private void notifyAdd(File file) {
-		notify("+ " + getFilePath(file));
-	}
-
-	private void notifyFileExists(File file) {
-		notify("= " + getFilePath(file));
-	}
-
-	private String append(String fileName, String suffix) {
-		if (!fileName.endsWith(suffix)) {
-			return fileName += suffix;
-		}
-		return fileName;
-	}
-
-	private class FilePather {
-		String projectName;
-
-		public FilePather(String projectName) {
-			this.projectName = projectName;
-		}
-
-		public String getFilePath(File file) {
-			final String path = file.getPath();
-			return path.substring(path.indexOf(projectName));
-		}
-		
-		public String getFileListPath(File file) {
-			final String path = file.getPath();
-			return path.substring(path.indexOf(projectName) + projectName.length() + 1);
-		}
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.pactera.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -88,6 +90,56 @@ public class StringUtil {
 
 	public static String findFirst(String regex, String s) {
 		return findFirst(Pattern.compile(regex), s);
+	}
+
+	public static List<String> findAll(Pattern pattern, String s) {
+		List<String> groups = new ArrayList<String>();
+		Matcher matcher = pattern.matcher(s);
+		while (matcher.find()) {
+			groups.add(matcher.group());
+		}
+		return groups;
+	}
+
+	public static List<String> findAll(String regex, String s) {
+		return findAll(Pattern.compile(regex), s);
+	}
+
+	/**
+	 * @param s 以下划线分隔的单词组合
+	 * @return
+	 */
+	public static String toClassName(String s) {
+		String[] words = s.split("_");
+		StringBuffer name  = new StringBuffer();
+		for (String word : words) {
+			name.append(upperFirst(word.toLowerCase()));
+		}
+		return name.toString();
+	}
+
+	public static String upperFirst(String s) {
+		if (isEmpty(s)) {
+			return s;
+		}
+		return s.substring(0, 1).toUpperCase() + s.substring(1);
+	}
+
+	/**
+	 * 按单词转换为以下划线分隔的字符串，如输入<code>englishName</code>，则返回<code>english_name</code>
+	 * 
+	 * @param s
+	 * @return
+	 */
+	public static String toUnderlineSplitName(String s) {
+		StringBuffer sb = new StringBuffer();
+		for (char ch : s.toCharArray()) {
+			if (Character.isUpperCase(ch)) {
+				sb.append('_');
+			}
+			sb.append(Character.toLowerCase(ch));
+		}
+		return sb.toString();
 	}
 
 }

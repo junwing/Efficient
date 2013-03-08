@@ -12,6 +12,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionDelegate;
 
 import com.pactera.eclipse.efficient.MakeDesignHelper;
+import com.pactera.eclipse.efficient.exception.EfficientException;
+import com.pactera.eclipse.efficient.logging.ELog;
 
 public class MakeDesignAction extends BaseAction {
 
@@ -35,7 +37,10 @@ public class MakeDesignAction extends BaseAction {
 					try {
 						helper.addObserver(new ActionObserver(console));
 						helper.toFile(helper.makeDesign());
-						console.println("---------------- make done ----------------\n");
+						ELog.info("---------------- make done ----------------\n");
+					} catch (EfficientException e) {
+						// e.printStackTrace(console);
+						alert(e.getMessage());
 					} catch (IOException e) {
 						e.printStackTrace(console);
 						alert("the design file format is NOT right. ");

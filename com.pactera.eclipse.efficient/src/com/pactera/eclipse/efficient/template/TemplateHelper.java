@@ -13,12 +13,12 @@ import com.pactera.file.util.FileUtil;
 
 public class TemplateHelper {
 
-	private static Map<TemplateType, String> TEMPLATE_MAP;
+	private static Map<String, String> TEMPLATE_MAP;
 
 	static {
-		TEMPLATE_MAP = new HashMap<TemplateType, String>();
-		for (TemplateType template : TemplateType.values()) {
-			TEMPLATE_MAP.put(template, null);
+		TEMPLATE_MAP = new HashMap<String, String>();
+		for (TemplateType type : TemplateType.values()) {
+			TEMPLATE_MAP.put(type.getName(), null);
 		}
 	}
 
@@ -26,12 +26,20 @@ public class TemplateHelper {
 	}
 
 	public static String getTemplate(TemplateType type) {
-		String template = TEMPLATE_MAP.get(type);
+		return getTemplate(type.getName());
+	}
+
+	public static String getTemplate(String name) {
+		if (!TEMPLATE_MAP.containsKey(name)) {
+			return null;
+		}
+		String template = TEMPLATE_MAP.get(name);
 		if (template == null) {
 			try {
-				template = getTemplateContent(type.getName());
-				TEMPLATE_MAP.put(type, template);
+				template = getTemplateContent(name);
+				TEMPLATE_MAP.put(name, template);
 			} catch (IOException e) {
+				// TODO
 				e.printStackTrace();
 			}
 		}
@@ -39,15 +47,17 @@ public class TemplateHelper {
 	}
 
 	public static String getFinalContent(TemplateType type, KeyValues keyValues) {
-		String template = getTemplate(type);
-		for (KeyValue kv : keyValues.getPairs()) {
-			template = template.replaceAll("\\{\\s*" + kv.getKey() + "\\s*\\}", kv.getValue());
-		}
-		return template;
+		return getFinalContent(type.getName(), keyValues);
 	}
 
-	public static String getTemplate(String name) {
-		return getTemplate(TemplateType.valueOf(name));
+	public static String getFinalContent(String name, KeyValues keyValues) {
+		String template = getTemplate(name);
+		if (keyValues != null && template != null) {
+			for (KeyValue kv : keyValues.getPairs()) {
+				template = template.replaceAll("\\{\\s*" + kv.getKey() + "\\s*\\}", kv.getValue());
+			}
+		}
+		return template;
 	}
 
 	public static String getBizTemplate() {

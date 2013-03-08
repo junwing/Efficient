@@ -3,7 +3,7 @@ package com.pactera.eclipse.efficient.module.define;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pactera.eclipse.efficient.module.Defination;
+import com.pactera.eclipse.efficient.module.AbstractDefination;
 
 /**
  * mvc定义，包括mvc文件名和mvc中的action定义
@@ -11,12 +11,13 @@ import com.pactera.eclipse.efficient.module.Defination;
  * @author ruanzr
  * 
  */
-public class MvcDefination implements Defination {
+public class MvcDefination extends AbstractDefination {
 
 	private String mvcName;
 	private List<ActionDefination> actions;
 
-	public MvcDefination(String mvcName) {
+	public MvcDefination(String directoryName, String mvcName) {
+		this.directoryName = directoryName;
 		this.mvcName = mvcName;
 		this.actions = new ArrayList<ActionDefination>();
 	}

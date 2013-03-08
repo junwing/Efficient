@@ -255,6 +255,25 @@ public class FileUtil {
 		}
 	}
 
+	/**
+	 * 将String写到文件中
+	 * 
+	 * @param str
+	 * @param file
+	 * @param append
+	 *            是否追加
+	 * @throws IOException
+	 */
+	public static void writeString2File(String str, File file, boolean append) throws IOException {
+		Writer writer = null;
+		try {
+			writer = new OutputStreamWriter(new FileOutputStream(file, append));
+			writer.write(str);
+		} finally {
+			close(writer);
+		}
+	}
+
 	public static String[] search(File file, String regex) {
 		RandomAccessFile accessFile = null;
 		try {

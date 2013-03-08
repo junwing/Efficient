@@ -3,16 +3,17 @@ package com.pactera.eclipse.efficient.module.define;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.pactera.eclipse.efficient.module.Defination;
+import com.pactera.eclipse.efficient.module.AbstractDefination;
 import com.pactera.eclipse.efficient.template.TemplateHelper;
 
-public class BizDefination implements Defination {
+public class BizDefination extends AbstractDefination {
 
 	private String bizName;
 	private String bizId;
 	private List<FlowDefination> flows;
 
-	public BizDefination(String bizName, String bizId) {
+	public BizDefination(String directoryName, String bizName, String bizId) {
+		this.directoryName = directoryName;
 		this.bizName = bizName;
 		this.bizId = bizId;
 		this.flows = new ArrayList<FlowDefination>();

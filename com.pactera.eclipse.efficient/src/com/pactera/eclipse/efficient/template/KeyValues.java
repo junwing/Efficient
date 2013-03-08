@@ -1,7 +1,7 @@
 package com.pactera.eclipse.efficient.template;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * key value pairs
@@ -11,13 +11,13 @@ import java.util.List;
  */
 public class KeyValues {
 
-	private List<KeyValue> pairs = new ArrayList<KeyValue>();
+	private Set<KeyValue> pairs = new HashSet<KeyValue>();
 
 	public void addPair(String key, String value) {
 		pairs.add(new KeyValue(key, value));
 	}
 
-	public List<KeyValue> getPairs() {
+	public Set<KeyValue> getPairs() {
 		return pairs;
 	}
 
@@ -54,6 +54,29 @@ class KeyValue {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		return result;
+	}
+
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		KeyValue other = (KeyValue) obj;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		} else if (!key.equals(other.key))
+			return false;
+		return true;
 	}
 
 }

@@ -14,7 +14,7 @@ import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IConsoleManager;
 import org.eclipse.ui.console.MessageConsole;
 
-public abstract class BaseAction  implements IObjectActionDelegate {
+public abstract class BaseAction implements IObjectActionDelegate {
 
 	public static final String CONSOLE_NAME = "Efficient";
 	protected ISelection selection;
@@ -37,9 +37,13 @@ public abstract class BaseAction  implements IObjectActionDelegate {
 		this.selection = selection;
 	}
 
-	protected static PrintStream getConsole() {
+	public static PrintStream getConsole() {
 		MessageConsole console = null;
-		final IConsoleManager consoleManager = ConsolePlugin.getDefault().getConsoleManager();
+		ConsolePlugin dfPlugin = ConsolePlugin.getDefault();
+		if (dfPlugin == null) {
+			return System.out;
+		}
+		final IConsoleManager consoleManager = dfPlugin.getConsoleManager();
 		for (IConsole c : consoleManager.getConsoles()) {
 			if (CONSOLE_NAME.equals(c.getName())) {
 				console = (MessageConsole) c;
