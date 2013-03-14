@@ -117,7 +117,7 @@ public class Table {
 			sql.append(',');
 			sql.append('\t');
 			sql.append("--");
-			sql.append(col.getDescription());
+			sql.append(col.getDescription().replaceAll("\\r?\\n", " "));
 			sql.append('\n');
 		}
 		if (getPrimaryKeys().size() > 0) {
@@ -131,6 +131,16 @@ public class Table {
 		}
 		sql.append(");\n");
 		return sql.toString();
+	}
+
+	public String toComment() {
+		StringBuffer comment = new StringBuffer();
+		comment.append("COMMENT ON TABLE ").append(getEnglishName()).append(" IS '").append(getChineseName()).append("';\n");
+		for (Column col : getColumns()) {
+			comment.append("COMMENT ON COLUMN ").append(getEnglishName()).append(".").append(col.getName()).append(" IS '");
+			comment.append(col.getDescription().replaceAll("\\r?\\n", " ")).append("';\n");
+		}
+		return comment.toString();
 	}
 
 	/**
