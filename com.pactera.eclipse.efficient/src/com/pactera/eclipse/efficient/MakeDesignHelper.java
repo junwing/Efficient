@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import com.pactera.eclipse.efficient.exception.EfficientException;
 import com.pactera.eclipse.efficient.logging.ELog;
 import com.pactera.eclipse.efficient.module.PatchInfo;
 import com.pactera.eclipse.efficient.module.db.Table;
@@ -28,13 +29,13 @@ public class MakeDesignHelper extends Observable {
 	}
 
 	/**
-	 * 使用<code>makeDesign()</code>方法前要先<code>override</code>该方法，以返回工程的实际路径
+	 * 使用<code>makeDesign()</code>方法前要先<code>override</code>该方法，以根据<code>projectName</code>返回工程的实际路径
 	 * 
 	 * @param projectName
 	 * @return
 	 */
 	public String getPath(String projectName) {
-		return null;
+		throw new EfficientException("must override this method first.");
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class MakeDesignHelper extends Observable {
 		FileUtil.mkdirs(tableDir);
 		for (Table table : tables) {
 			File sqlFile = new File(tableDir, table.getEnglishName() + ".sql");
-			FileUtil.writeString2File(table.toSQL(), sqlFile, "GBK");
+			FileUtil.writeString2File(table.toSQL() + table.toComment(), sqlFile, "GBK");
 			ELog.info("+ TABLE: " + sqlFile.getName());
 			String seq = table.toSequence();
 			if (seq != null) {
