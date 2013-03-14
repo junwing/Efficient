@@ -154,7 +154,9 @@ public class DesignParser {
 
 	private static void parseMenu(DesignDefination designDefine, HSSFRow row) {
 		final String bsnCode = getCellValue(row, 0);
-		designDefine.addMenu(bsnCode, new MenuDefination(bsnCode, getCellValue(row, 1), getCellValue(row, 2), getCellValue(row, 3), getCellValue(row, 4), getCellValue(row, 5), getCellValue(row, 6), getCellValue(row, 7)));
+		if (!StringUtil.isEmpty(bsnCode)) {
+			designDefine.addMenu(bsnCode, new MenuDefination(bsnCode, getCellValue(row, 1), getCellValue(row, 2), getCellValue(row, 3), getCellValue(row, 4), getCellValue(row, 5), getCellValue(row, 6), getCellValue(row, 7)));
+		}
 	}
 
 	private static void parseBiz(DesignDefination designDefine, HSSFRow row, final int step, String dirName, String name) {
